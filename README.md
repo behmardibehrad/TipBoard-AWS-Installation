@@ -71,3 +71,11 @@
 		- tipboard works with python 2
 		- create the virtualenv using 
 			- virtualenv --python=/usr/bin/python2.7 <path/to/new/virtualenv/>
+##
+#### 2. Commands for redis-server
+		- sudo /etc/init.d/redis-server restart
+		- sudo /etc/init.d/redis-server start
+		- sudo /etc/init.d/redis-server stop
+##
+
+#### 3. 

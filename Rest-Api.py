@@ -17,7 +17,7 @@ data_push_group_memebrs = dict(tile='listing',
                      key='1',
                      data=json.dumps({
                          "title": "Group Memebers",
-                         "items": [["\t\tCS 101 GROUP PROJECT"],["1. Joshua Lilly"],["2. Behrad Beddddddhmardi"],["3. William Zheng"],["4. Omnia Elemary"]]}))
+                         "items": [["\t\tCS 101 GROUP PROJECT"],["1. Joshua Lilly"],["2. Behrddddddad Beddddddhmardi"],["3. William Zheng"],["4. Omnia Elemary"]]}))
 
 r = requests.post(url, data=data_push_group_memebrs)
 
