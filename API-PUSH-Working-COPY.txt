@@ -1,0 +1,214 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
+
+
+public class ApiPush {
+
+	private final String USER_AGENT = "Mozilla/5.0";
+
+	public static void main(String[] args) throws Exception {
+
+		ApiPush http = new ApiPush();
+
+		System.out.println("Testing 1 - Send Http GET request");
+		http.sendGet();
+
+		System.out.println("\nTesting 2 - Send Http POST request");
+		http.sendPost();
+
+	}
+
+	// HTTP GET request
+	private void sendGet() throws Exception {
+
+		String url = "http://54.213.22.248:7272/";
+
+		HttpClient client = new DefaultHttpClient();
+		HttpGet request = new HttpGet(url);
+
+		// add request header
+		request.addHeader("User-Agent", USER_AGENT);
+
+		HttpResponse response = client.execute(request);
+
+		System.out.println("\nSending 'GET' request to URL : " + url);
+		System.out.println("Response Code : " +
+                       response.getStatusLine().getStatusCode());
+
+		BufferedReader rd = new BufferedReader(
+                       new InputStreamReader(response.getEntity().getContent()));
+
+		StringBuffer result = new StringBuffer();
+		String line = "";
+		while ((line = rd.readLine()) != null) {
+			result.append(line);
+		}
+
+		System.out.println(result.toString());
+		
+		
+		URL url1 = new URL(url);
+		HttpURLConnection conn = (HttpURLConnection)url1.openConnection(); 
+		conn.setRequestMethod("GET");
+		conn.connect();
+		int responsecode = conn.getResponseCode();
+		if(responsecode != 200)
+			throw new RuntimeException("HttpResponseCode: " +responsecode);
+			else
+			{
+		Scanner sc = new Scanner(url1.openStream());
+		while(sc.hasNext())
+		{
+		line+=sc.nextLine();
+		}
+		System.out.println("\nJSON data in string format");
+		System.out.println(line);
+		sc.close();
+			}
+		
+
+	}
+
+	// HTTP POST request
+	private void sendPost() throws Exception {
+
+		String url = "http://54.213.22.248:7272/api/v0.1/d4c4119ab1a849b0b1b0cdd81e5739ac/push";
+
+		HttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost(url);
+
+		// add header
+		post.setHeader("User-Agent", USER_AGENT);
+
+		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		urlParameters.add(new BasicNameValuePair("tile", "big_value"));
+		urlParameters.add(new BasicNameValuePair("key", "1"));
+			    //"fading_background": <BOOLEAN>
+			
+		//'value={"big_value_color": "green", "fading_background": true}'
+		//ArrayList<String> list = new ArrayList<String>();
+		//list.add("CS 101 GROUP PROJECT");
+		//list.add("mat");
+		//list.add("jason");
+		//list.add("matthew");
+		
+		
+		String tileDataString;
+		JSONObject tileData = new JSONObject();
+		tileData.put("title", "AA 3456");
+		tileData.put("description", "");
+		tileData.put("big-value", "TYPE I");
+		tileData.put("upper-left-label", "A/C Type:  ");
+		tileData.put("upper-left-value", "2222");
+		tileData.put("lower-left-label", "tail#:  ");
+		tileData.put("lower-left-value", "22");
+		tileData.put("upper-right-label", "Start Time:  ");
+		tileData.put("upper-right-value", "22");
+		tileData.put("lower-right-label", "22");
+		tileData.put("lower-right-value", "22");
+		tileDataString = tileData.toString();
+		System.out.println(tileDataString);
+		
+		
+		urlParameters.add(new BasicNameValuePair("data", tileDataString));
+		post.setEntity(new UrlEncodedFormEntity(urlParameters));
+		
+		
+		String urlConf = "http://54.213.22.248:7272/api/v0.1/d4c4119ab1a849b0b1b0cdd81e5739ac/tileconfig/1";
+		HttpClient clientConf = new DefaultHttpClient();
+		HttpPost postConf = new HttpPost(urlConf);
+		postConf.setHeader("User-Agent", USER_AGENT);
+		
+		List<NameValuePair> urlParametersConf = new ArrayList<NameValuePair>();
+		
+		
+		String tileConfValueString;
+		JSONObject tileConfValue = new JSONObject();
+		tileConfValue.put("big_value_color", "green");
+	    tileConfValue.put("fading_background", true);
+		tileConfValueString = tileConfValue.toString();
+		urlParametersConf.add(new BasicNameValuePair("value", tileConfValueString));
+		
+		System.out.println(tileConfValueString);
+		postConf.setEntity(new UrlEncodedFormEntity(urlParametersConf));
+		
+		
+
+		HttpResponse response = client.execute(post);
+		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("Post parameters : " + post.getEntity());
+		System.out.println("Response Code : " +
+                                    response.getStatusLine().getStatusCode());
+
+		BufferedReader rd = new BufferedReader(
+                        new InputStreamReader(response.getEntity().getContent()));
+
+		StringBuffer result = new StringBuffer();
+		String line = "";
+		while ((line = rd.readLine()) != null) {
+			result.append(line);
+		}
+
+		System.out.println(result.toString());
+		
+		
+		
+		
+		
+		HttpResponse response1 = client.execute(postConf);
+		System.out.println("\nSending 'POST' request to URL : " + urlConf);
+		System.out.println("Post parameters : " + postConf.getEntity());
+		System.out.println("Response Code : " +
+                                    response1.getStatusLine().getStatusCode());
+
+		BufferedReader rd1 = new BufferedReader(
+                        new InputStreamReader(response1.getEntity().getContent()));
+
+		StringBuffer result1 = new StringBuffer();
+		String line1 = "";
+		while ((line1 = rd1.readLine()) != null) {
+			result1.append(line1);
+		}
+
+		System.out.println(result1.toString());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+	}
+
+}
